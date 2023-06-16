@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <!-- babel: 做语法转换，将你书写的语法转换为另一种语法 -->
+  <!-- 浏览器兼容性不好的时候，babel进行语法降级，例如将es6降级为es5 -->
+  <!-- 此处的babel是用于语法转换，将JSX转换为React.createElement的代码 -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <!--  type=text/babel意味着babel将要接管此处的代码解析 -->
+  <!-- 默认下type=text/javascript浏览器以js方式解析 -->
+  <!-- 浏览器只会处理type=text/javascript或module的情况 -->
+  <script type="text/babel">
+    ReactDOM.render(
+    (
+      <div>
+        <h1>Hello</h1>  
+        <p>World</p>
+        <b>React is awesome!</b>
+        <b>Babel is used for syntax transform ~</b>
+      </div>
+    ), document.getElementById('root') );
+  </script>
+</body>
+</html>
