@@ -1,11 +1,7 @@
 import axios from 'axios'
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8888",
-})
-
 export const getStudentList = ()=>{
-  return axiosInstance.get("/student")
+  return axios.get("/api/student")
 }
 
 // 跨域

@@ -8,13 +8,21 @@ koaApp.listen(PORT,() => {
   console.log(`PORT is listening at ${PORT}`);
  })
 
-koaApp.use((ctx) => { 
+function delay(duration=2000){
+  return new Promise((resolve,reject)=>{
+    setTimeout(() => { 
+      resolve()
+     },duration)
+  })
+}
+
+koaApp.use(async (ctx) => { 
   const {path} = ctx
   if (path==='/student') {
     const data = require('./student.json')
+    await delay(2000)
     ctx.response.body = data
   }
-  // console.log(`ctx path:${path}`)
 })
 
 // 在应用程序停止运行后，自动关闭端口
