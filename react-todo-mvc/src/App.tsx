@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Todo } from './types/Todo';
+import Todos from './components/Todos';
 
 function App() {
   const KEY = "react-todos"
@@ -91,63 +92,69 @@ function App() {
   }
 
   return (
-    <main className="todoapp">
-      {/* header */}
-      <header className="header">
-        <h1>todos</h1>
-        <input type="text" placeholder='What needs to be done?' autoFocus className='new-todo' 
-          value={val}
-          onChange={handleChange}
-          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => event.key === 'Enter' && addTodo()
-        }/>
-      </header>
-      {/* section */}
-      <section className="main" v-show="todos.length">
-        <input id="toggle-all" className="toggle-all" type="checkbox" />
-        <label htmlFor="toggle-all">Mark all as complete</label>
-        <ul className="todo-list">
-          {filterList.map(todo => (
-            <li className={`todo ${(todo===editedTodo)?'editing':''}}`}>
-            {/* <li className='todo' > */}
+    <div>
+      <main className="todoapp">
+        {/* header */}
+        <header className="header">
+          <h1>todos</h1>
+          <input type="text" placeholder='What needs to be done?' autoFocus className='new-todo' 
+            value={val}
+            onChange={handleChange}
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => event.key === 'Enter' && addTodo()
+          }/>
+        </header>
+        {/* section */}
+        <section className="main" v-show="todos.length">
+          <input id="toggle-all" className="toggle-all" type="checkbox" />
+          <label htmlFor="toggle-all">Mark all as complete</label>
+          <ul className="todo-list">
+            {filterList.map(todo => (
+              <li className={`todo ${(todo===editedTodo)?'editing':''}}`}>
+              {/* <li className='todo' > */}
 
-              {todo===editedTodo 
-              ? 
-              <input type='text' className='myEdit' value={tmpVal} autoFocus onChange={updateTodo} style={{width:"90%", fontSize:"24px", height:"100%"}} onBlur={()=>handleBlur(todo)}/>
-              :
-              <div className="view">
-              <input type="checkbox" className="toggle" checked={todo.completed} onChange={()=>completeSingleTodo(todo)}/>
-              <label onDoubleClick={()=>editTodo(todo)}>{ todo.title }</label>
-              <button className="destroy" onClick={()=>removeTodo(todo)}></button>
-            </div>
-            }
+                {todo===editedTodo 
+                ? 
+                <input type='text' className='myEdit' value={tmpVal} autoFocus onChange={updateTodo} style={{width:"90%", fontSize:"24px", height:"100%"}} onBlur={()=>handleBlur(todo)}/>
+                :
+                <div className="view">
+                <input type="checkbox" className="toggle" checked={todo.completed} onChange={()=>completeSingleTodo(todo)}/>
+                <label onDoubleClick={()=>editTodo(todo)}>{ todo.title }</label>
+                <button className="destroy" onClick={()=>removeTodo(todo)}></button>
+              </div>
+              }
+              </li>
+            ))}
+          </ul>
+        </section>
+        {/* footer */}
+        <footer className="footer" style={{ display: list.length ? '' : 'none' }}>
+          <span className="todo-count">
+            <strong>{remaining}</strong>
+            <span>{remaining === 1 ? ' item' : ' items'} left</span>
+          </span>
+          {/* 路由：分类展示 */}
+          <ul className="filters">
+            <li>
+              <a href="#/all" className={visibility === 'all' ? 'selected' : ''}>All</a>
             </li>
-          ))}
-        </ul>
-      </section>
-      {/* footer */}
-      <footer className="footer" style={{ display: list.length ? '' : 'none' }}>
-        <span className="todo-count">
-          <strong>{remaining}</strong>
-          <span>{remaining === 1 ? ' item' : ' items'} left</span>
-        </span>
-        {/* 路由：分类展示 */}
-        <ul className="filters">
-          <li>
-            <a href="#/all" className={visibility === 'all' ? 'selected' : ''}>All</a>
-          </li>
-          <li>
-            <a href="#/active" className={visibility === 'active' ? 'selected' : ''}>Active</a>
-          </li>
-          <li>
-            <a href="#/completed" className={visibility === 'completed' ? 'selected' : ''}>Completed</a>
-          </li>
-        </ul>
-        {/* 清空已完成事项 */}
-        <button className="clear-completed" onClick={removeCompleted} style={{ display: list.length > remaining ? '' : 'none' }}>
-          Clear completed
-        </button>
-      </footer>
-    </main>
+            <li>
+              <a href="#/active" className={visibility === 'active' ? 'selected' : ''}>Active</a>
+            </li>
+            <li>
+              <a href="#/completed" className={visibility === 'completed' ? 'selected' : ''}>Completed</a>
+            </li>
+          </ul>
+          {/* 清空已完成事项 */}
+          <button className="clear-completed" onClick={removeCompleted} style={{ display: list.length > remaining ? '' : 'none' }}>
+            Clear completed
+          </button>
+        </footer>
+      </main>
+      <main>
+        <Todos />
+      </main>
+    </div>
+
   );
 }
 
