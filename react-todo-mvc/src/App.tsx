@@ -12,8 +12,11 @@ function App() {
 
   // 2.处理具体todos列表
   // 2.0 数据准备
+  const [editedTodo,setEditedTodo] = useState<Todo>()
+  const [tmpVal,setTmpVal] = useState('')
   const [list, setList] = useState<Todo[]>(JSON.parse(localStorage.getItem(KEY) || '[]'))
-  const [visibility,setVisibility] = useState('all')
+  // 结合路由实现数据显示切换
+  const [visibility,setVisibility] = useState('all') 
   const remaining = useMemo(() => list.filter(item => !item.completed).length, [list]);
   const filterList = useMemo(()=>list.filter(item => {
     if (visibility==='completed') {
@@ -53,8 +56,12 @@ function App() {
     });
     setList(newList)
   }
-  const updateTodo = (todo:Todo)=>{
-    console.log("updateTodo")
+  const editTodo = (todo:Todo)=>{
+    setTmpVal(todo.title)
+    setEditedTodo(todo)
+  }
+  const updateTodo = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    setTmpVal(e.target.value)
   }
 
   // 3.状态持久化
@@ -69,6 +76,19 @@ function App() {
     console.log("route:",route)
   }
   window.onhashchange = onHashChange
+
+  const handleBlur = (todo:Todo)=>{
+    const newList = list.map(item=>{
+      if (item.id===todo.id) {
+        return {
+          ...item,title:tmpVal
+        }
+      }else {
+        return item
+      }
+    })
+    setList(newList)
+  }
 
   return (
     <main className="todoapp">
@@ -87,12 +107,19 @@ function App() {
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul className="todo-list">
           {filterList.map(todo => (
-            <li className={todo.completed ? "todo completed" : "todo"}>
+            <li className={`todo ${(todo===editedTodo)?'editing':''}}`}>
+            {/* <li className='todo' > */}
+
+              {todo===editedTodo 
+              ? 
+              <input type='text' className='myEdit' value={tmpVal} autoFocus onChange={updateTodo} style={{width:"90%", fontSize:"24px", height:"100%"}} onBlur={()=>handleBlur(todo)}/>
+              :
               <div className="view">
-                <input type="checkbox" className="toggle" checked={todo.completed} onChange={()=>completeSingleTodo(todo)}/>
-                <label onDoubleClick={()=>updateTodo(todo)}>{ todo.title }</label>
-                <button className="destroy" onClick={()=>removeTodo(todo)}></button>
-              </div>
+              <input type="checkbox" className="toggle" checked={todo.completed} onChange={()=>completeSingleTodo(todo)}/>
+              <label onDoubleClick={()=>editTodo(todo)}>{ todo.title }</label>
+              <button className="destroy" onClick={()=>removeTodo(todo)}></button>
+            </div>
+            }
             </li>
           ))}
         </ul>
