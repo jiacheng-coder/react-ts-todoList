@@ -3,7 +3,8 @@ import TodoList from "./components/TodoList";
 function App() {
   return (
     <>
-      <TodoList />
+      <TodoList KEY="todo-1"/>
+      <TodoList KEY="todo-2"/>
     </>
   );
 }
