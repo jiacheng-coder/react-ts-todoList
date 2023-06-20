@@ -1,5 +1,5 @@
 import { FC,useMemo,useCallback } from "react"
-import { Todo } from "../../types/Todo";
+import { Todo } from "../../../../types/Todo";
 
 interface Props {
   list: Array<Todo>;

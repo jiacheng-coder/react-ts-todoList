@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Todo } from '../../types/Todo';
 import "./index.css"
 // 引入组件
-import TodoHeader from '../TodoHeader';
-import TodoMain from '../TodoMain';
-import TodoFooter from '../TodoFooter';
+import TodoHeader from './components/TodoHeader';
+import TodoMain from './components/TodoMain';
+import TodoFooter from './components/TodoFooter';
 
 function TodoList({KEY}:{KEY:string}) {  
   const [val,setVal] = useState('') // 输入框

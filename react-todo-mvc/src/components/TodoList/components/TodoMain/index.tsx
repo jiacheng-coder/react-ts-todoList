@@ -1,5 +1,5 @@
 import React, { FC,useMemo } from 'react';
-import { Todo } from '../../types/Todo';
+import { Todo } from '../../../../types/Todo';
 import TodoItem from './components/TodoItem';
 
 interface Props {
