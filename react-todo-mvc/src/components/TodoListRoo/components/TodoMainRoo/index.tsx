@@ -1,6 +1,6 @@
 import Table from '@roo/roo/Table';
 import Button from '@roo/roo/Button';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { TodoItem } from '../../../../types/Todo';
 
 interface Props {
@@ -9,6 +9,11 @@ interface Props {
 }
 
 const TodoMainRoo:FC<Props> = ({list,setList}) =>{
+  const deleteSingleTodo = (todo:TodoItem)=>{
+    const newList = list.filter(item=>item.id!==todo.id)
+    setList(newList)
+  }
+  const remainNum = useMemo(()=>list.length,[list])
   const columns: any = [
     { prop: 'title', label: '标题', align: 'center', width: 70},
     { prop: 'content', label: '内容', align: 'center', width: 200},
@@ -26,10 +31,10 @@ const TodoMainRoo:FC<Props> = ({list,setList}) =>{
       width: 250,
       fixed: 'right',
       align: 'center',
-      render: () => (
+      render: (text:any,record:TodoItem) => (
           <>
               <Button type="brand-text">编辑</Button>
-              <Button type="brand-text">删除</Button>
+              <Button type="brand-text" onClick={()=>deleteSingleTodo(record)}>删除</Button>
           </>
       )
     }
@@ -38,7 +43,7 @@ const TodoMainRoo:FC<Props> = ({list,setList}) =>{
     <main className='TodoMainRoo' style={{marginTop:"20px"}}>
         <h2>代办汇总</h2>
         <Table
-            rowKey="name"
+            rowKey="id"
             border
             hover
             columns={columns}
@@ -46,7 +51,7 @@ const TodoMainRoo:FC<Props> = ({list,setList}) =>{
             scrollX={1500}
             scrollY={600}
             pagination={{
-                total: 4,
+                total: remainNum,
                 pageSize: 10,
                 showJumper: true,
                 pageSizeOptions: [10, 20, 30, 50],

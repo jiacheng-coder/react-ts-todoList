@@ -104,8 +104,8 @@ const TodoHeaderRoo: FC<Props> = ({ val, setVal, list, setList }) => {
               <Form.Field label="状态" name="completed" required>
                 {({ value, handleChange }: any) => (
                   <>
-                    <CheckBox value={value} onChange={handleChange}>已完成</CheckBox>
-                    <CheckBox value={value} onChange={handleChange}>未完成</CheckBox>
+                    <CheckBox value={value} onChange={handleChange}>是否已完成</CheckBox>
+                    {/* <CheckBox value={value} onChange={handleChange}>未完成</CheckBox> */}
                   </>
                 )}
               </Form.Field>
