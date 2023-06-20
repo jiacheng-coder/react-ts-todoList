@@ -1,11 +1,16 @@
-import StudentList from "./components/StudentList";
+import TestInput from "./components/TestInput";
+import { useCallback,useRef } from "react";
 
 function App() {
+  const inputElementRef = useRef(null)
+  const handleClick = useCallback(()=>{
+    inputElementRef.current.focus() 
+  },[])
   return (
-    <div>
-      <h1 style={{width:"100%",textAlign:"center"}}>FullStack Project</h1>
-      <StudentList />
-    </div>
+    <>
+      <TestInput ref={inputElementRef}/>
+      <button onClick={handleClick}>Click</button>
+    </>
   )
 }
 
