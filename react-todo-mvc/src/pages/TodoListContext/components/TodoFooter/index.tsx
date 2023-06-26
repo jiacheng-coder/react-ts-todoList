@@ -1,16 +1,10 @@
-import { FC, useMemo, useCallback, MouseEvent } from "react";
-import { Todo } from "../../../../types/TodoItem";
+import { useMemo, useCallback, useContext, MouseEvent } from "react";
 import { TodoStatus } from "../../../../types/TodoStatus";
 import './index.css'
+import { TodoContext } from "../..";
 
-interface Props {
-  list: Todo[];
-  setList: React.Dispatch<React.SetStateAction<Todo[]>>;
-  todoStatus: TodoStatus;
-  setTodoStatus: React.Dispatch<React.SetStateAction<TodoStatus>>
-}
-
-const TodoFooter: FC<Props> = ({ list, setList, todoStatus, setTodoStatus }) => {
+const TodoFooter= () => {
+  const { list, setList, todoStatus, setTodoStatus } = useContext(TodoContext)
   const remainNum = useMemo(() => list.filter(item => !item.completed).length, [list]);
   const removeCompleted = useCallback(() => {
     setList((preList) => {

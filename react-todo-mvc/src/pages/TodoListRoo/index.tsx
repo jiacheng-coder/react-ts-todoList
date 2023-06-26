@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TodoItem } from '../../types/TodoItems';
+import { TodoItem } from '../../types/TodoItem';
 import TodoHeaderRoo from './components/TodoHeaderRoo';
 import TodoMainRoo from './components/TodoMainRoo';
 import "./index.css"

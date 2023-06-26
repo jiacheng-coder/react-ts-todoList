@@ -1,20 +1,10 @@
-import React, { FC,useMemo } from 'react';
+import React, { useMemo,useContext } from 'react';
 import TodoItem from '../TodoItem';
-import { Todo } from '../../../../types/TodoItem';
-import { TodoStatus } from '../../../../types/TodoStatus';
+import { TodoContext } from '../..';
 
-interface Props {
-  list: Todo[];
-  setList: React.Dispatch<React.SetStateAction<Todo[]>>;
-  todoStatus: TodoStatus;
-}
+const TodoMain = () => {
+  const { list, todoStatus  } = useContext(TodoContext);
 
-const TodoMain:FC<Props> = (props) => {
-  const {
-    list,
-    setList,
-    todoStatus,
-  } = props;
   const filterList = useMemo(()=>list.filter(item => {
     if (todoStatus==='completed') {
       return item.completed===true
@@ -31,7 +21,7 @@ const TodoMain:FC<Props> = (props) => {
       <label htmlFor="toggle-all">Mark all as complete</label>
       <ul className="todo-list">
         {filterList.map((item) => (
-          <TodoItem todo={item} setList={setList} key={item.id}/>
+          <TodoItem todo={item} key={item.id}/>
         ))}
       </ul>
     </section>

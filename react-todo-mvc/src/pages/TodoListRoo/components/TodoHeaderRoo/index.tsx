@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { TodoItem } from '../../../../types/TodoItems';
+import { TodoItem } from '../../../../types/TodoItem';
 import { CheckBox, Input, Panel, DatePicker } from '@roo/roo';
 import Form from '@roo/roo/Form';
 import Button from '@roo/roo/Button';

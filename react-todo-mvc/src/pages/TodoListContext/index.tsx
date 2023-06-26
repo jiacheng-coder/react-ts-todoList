@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 // 引入组件
 import TodoHeader from './components/TodoHeader';
 import TodoMain from './components/TodoMain';
@@ -9,6 +9,13 @@ import { Todo } from '../../types/TodoItem';
 // 引入样式
 import "./index.css"
 
+// 创建上下文对象
+export const TodoContext = createContext({
+  list: [] as Todo[],
+  todoStatus: '' as TodoStatus,
+  setList: (() => {}) as React.Dispatch<React.SetStateAction<Todo[]>>,
+  setTodoStatus: (() => {}) as React.Dispatch<React.SetStateAction<TodoStatus>>,
+});
 
 function TodoList({KEY}:{KEY:string}) {  
   const [list, setList] = useState<Todo[]>(()=>JSON.parse(localStorage.getItem(KEY) || '[]')) // 代办列表
@@ -19,11 +26,13 @@ function TodoList({KEY}:{KEY:string}) {
   },[list,KEY])
 
   return (
-    <main className="todoapp">
-      <TodoHeader setList={setList}/>
-      <TodoMain list={list} setList={setList} todoStatus={todoStatus} />
-      <TodoFooter list={list} setList={setList} todoStatus={todoStatus} setTodoStatus={setTodoStatus}/>
-    </main>
+    <TodoContext.Provider value={{list,setList,todoStatus,setTodoStatus}}>
+      <main className="todoapp">
+        <TodoHeader />
+        <TodoMain />
+        <TodoFooter />
+      </main>
+    </TodoContext.Provider>
   );
 }
 

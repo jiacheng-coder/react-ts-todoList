@@ -1,30 +1,29 @@
-import React, { FC, useCallback, useState } from 'react';
-import { Todo } from '../types/TodoItems';
+import React, { FC, useCallback, useContext, useState } from 'react';
+import { Todo } from '../../../types/TodoItem';
+import { TodoContext } from '..';
 
 interface Props {
   todo: Todo;
-  list: Todo[]
-  setList: (val: Array<Todo>) => void;
 }
 
-const TodoItem: FC<Props> = (props) => {
-  const { todo, list, setList } = props;
+const TodoItem: FC<Props> = ({ todo }) => {
+  const {setList} = useContext(TodoContext)
   const [editedTodo, setEditedTodo] = useState<Todo>(); // 双击出现的输入框
   const [tmpVal, setTmpVal] = useState(''); // 临时存储输入框的内容
 
   // 完成事项
   const completeSingleTodo = useCallback(() => {
-    const newList = list.map((item) => {
-      return item.id === todo.id ? { ...item, completed: !item.completed } : item;
+    setList((preList)=>{
+      return preList.map((item) => {
+        return item.id === todo.id ? { ...item, completed: !item.completed } : item;
+      });
     });
-    setList(newList);
-  }, [list, setList, todo.id]);
+  }, [setList, todo.id]);
 
   // 删除事项
   const removeTodo = useCallback(() => {
-    const newList = list.filter((item) => item.id !== todo.id);
-    setList(newList);
-  }, [list, setList, todo.id]);
+    setList(preList=>preList.filter((item) => item.id !== todo.id));
+  }, [setList, todo.id]);
 
   // 编辑事项
   const editTodo = useCallback(() => {
@@ -39,11 +38,12 @@ const TodoItem: FC<Props> = (props) => {
 
   // 失去焦点时，自动修改list中对应的todo
   const handleBlur = useCallback(() => {
-    const newList = list.map((item) => {
-      return item.id === todo.id ? { ...item, title: tmpVal } : item;
+    setList(preList=>{
+      return preList.map((item) => {
+        return item.id === todo.id ? { ...item, title: tmpVal } : item;
+      });
     });
-    setList(newList);
-  }, [tmpVal, list, setList, todo.id]);
+  }, [tmpVal, setList, todo.id]);
 
   return (
     <li className={`todo ${(todo === editedTodo) ? 'editing' : ''}`}>

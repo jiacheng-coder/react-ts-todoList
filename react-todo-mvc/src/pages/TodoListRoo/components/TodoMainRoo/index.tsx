@@ -1,7 +1,7 @@
 import Table from '@roo/roo/Table';
 import Button from '@roo/roo/Button';
 import { FC, useMemo } from 'react';
-import { TodoItem } from '../../../../types/TodoItems';
+import { TodoItem } from '../../../../types/TodoItem';
 
 interface Props {
   list: TodoItem[];

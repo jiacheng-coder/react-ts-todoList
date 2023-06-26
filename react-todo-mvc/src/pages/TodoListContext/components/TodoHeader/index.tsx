@@ -1,11 +1,8 @@
-import React, { useCallback, useState, FC } from 'react';
-import { Todo } from '../../../../types/TodoItem';
+import React, { useCallback, useState, useContext} from 'react';
+import { TodoContext } from '../../index';
 
-interface Props {
-  setList: React.Dispatch<React.SetStateAction<Todo[]>>;
-}
-
-const TodoHeader: FC<Props> = ({ setList }) => {
+const TodoHeader = () => {
+  const { setList } = useContext(TodoContext);
   const [val,setVal] = useState('')
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
