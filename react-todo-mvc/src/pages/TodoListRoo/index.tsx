@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { TodoItem } from '../../types/Todo';
+import React, { useState, useEffect } from 'react';
+import { TodoItem } from '../../types/TodoItems';
 import TodoHeaderRoo from './components/TodoHeaderRoo';
 import TodoMainRoo from './components/TodoMainRoo';
-import { Button } from '@roo/roo';
 import "./index.css"
 
 function TodoListRoo({KEY}:{KEY:string}) {  
@@ -12,10 +11,6 @@ function TodoListRoo({KEY}:{KEY:string}) {
   useEffect(()=>{
     localStorage.setItem(KEY, JSON.stringify(list))
   },[list,KEY])
-  // 一键清空代办
-  const removeAllTodos = useCallback(()=>{
-    localStorage.removeItem(KEY)
-  },[KEY])
 
   return (
     <main className="TodoListRoo">
@@ -28,7 +23,7 @@ function TodoListRoo({KEY}:{KEY:string}) {
         setList={setList}
         todoType={todoType}
       /> */}
-      <Button onClick={()=>removeAllTodos()}>删除所有Todos</Button>
+      {/* <Button onClick={removeAllTodos}>删除所有Todos</Button> */}
     </main>
   );
 }

@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { TodoItem } from '../../../../types/Todo';
+import { TodoItem } from '../../../../types/TodoItems';
 import { CheckBox, Input, Panel, DatePicker } from '@roo/roo';
 import Form from '@roo/roo/Form';
 import Button from '@roo/roo/Button';
@@ -57,15 +57,24 @@ const TodoHeaderRoo: FC<Props> = ({ val, setVal, list, setList }) => {
           value={formValue}
           rules={rules}
           onSubmit={(value, errors) => {
+            // 错误处理
+            if (errors) {
+              return
+            }
             const todo = {
               ...value,
-              date: Date.now(),
               id: uuid(),
             };
+            // id覆盖
             let idx = list.findIndex(item=>item.id===todo.id)
             if (idx===-1) {
-              setList([...list,todo])
+              // 新增
+              setList([...list,{
+                ...value,
+                id: uuid(),
+              }])
             }else {
+              // 编辑
               const newList = list.map(item=>{
                 return (item.id===todo.id)?{...todo}:item
               })
@@ -96,6 +105,7 @@ const TodoHeaderRoo: FC<Props> = ({ val, setVal, list, setList }) => {
                   />
                 )}
               </Form.Field>
+              {/* 换成文本域 */}
               <Form.Field label="内容" name="content" required>
                 {({ value, handleChange }: any) => (
                   <Input value={value} onChange={handleChange} />

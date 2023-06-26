@@ -1,10 +1,11 @@
 import React, { FC,useMemo } from 'react';
-import { Todo } from '../../../../types/Todo';
-import TodoItem from './components/TodoItem';
+import { Todo } from '../../../../types/TodoItems';
+import TodoItem from '../../../../components/TodoItem';
 
 interface Props {
   list: Todo[];
   setList: (val: Array<Todo>) => void;
+  // 类型修改，命名修改
   todoType: string;
 }
 
@@ -30,7 +31,7 @@ const TodoMain:FC<Props> = (props) => {
       <label htmlFor="toggle-all">Mark all as complete</label>
       <ul className="todo-list">
         {filterList.map((todo) => (
-          <TodoItem todo={todo} list={list} setList={setList}/>
+          <TodoItem todo={todo} list={list} setList={setList} key={todo.id}/>
         ))}
       </ul>
     </section>

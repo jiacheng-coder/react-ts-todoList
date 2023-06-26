@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { Todo } from '../../../../../types/Todo';
+import { Todo } from '../types/TodoItems';
 
 interface Props {
   todo: Todo;
@@ -46,7 +46,7 @@ const TodoItem: FC<Props> = (props) => {
   }, [tmpVal, list, setList, todo.id]);
 
   return (
-    <li className={`todo ${(todo === editedTodo) ? 'editing' : ''}`} key={todo.id}>
+    <li className={`todo ${(todo === editedTodo) ? 'editing' : ''}`}>
       {todo === editedTodo ? (
         <input
           type="text"

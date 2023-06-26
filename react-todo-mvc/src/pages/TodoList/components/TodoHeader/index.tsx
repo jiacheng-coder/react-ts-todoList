@@ -1,31 +1,36 @@
-import React, { useCallback, FC } from 'react';
-import { Todo } from '../../../../types/Todo';
+import React, { useCallback, useState, FC } from 'react';
+import { Todo } from '../../../../types/TodoItems';
 
 interface Props {
-  val: string;
-  setVal: (val: string) => void;
-  list: Todo[];
-  setList: (val: Array<Todo>) => void;
+  setList: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const TodoHeader: FC<Props> = ({ val, setVal, list, setList }) => {
+const TodoHeader: FC<Props> = ({ setList }) => {
+  const [val,setVal] = useState('')
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setVal(e.target.value);
   }, [setVal]);
-  // 新增事项
-  const addTodo = useCallback(() => {
+
+  const addTodo = useCallback((e) => {
+    if (e.key!=='Enter') {
+      return 
+    }
+    // Enter 才执行下面的操作
     const trimmedVal = val.trim();
     if (trimmedVal !== '') {
-      setList([...list,{
-        id: Date.now(),
-        title: trimmedVal,
-        completed: false
-      }])
+      setList((preList)=>{
+        return [...preList,{
+          id: Date.now(),
+          title: trimmedVal,
+          completed: false
+        }]
+      })
       setVal('')
     }else {
       alert("输入不能为空！")
     }
-  },[val,setVal,list,setList])
+  },[val,setList])
 
   return (
     <header className="header">
@@ -37,7 +42,7 @@ const TodoHeader: FC<Props> = ({ val, setVal, list, setList }) => {
         className="new-todo"
         value={val}
         onChange={handleChange}
-        onKeyDown={(event) => event.key === 'Enter' && addTodo()}
+        onKeyDown={addTodo}
       />
     </header>
   );
