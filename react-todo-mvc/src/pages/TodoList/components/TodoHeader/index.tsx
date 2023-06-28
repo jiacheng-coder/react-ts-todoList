@@ -10,7 +10,7 @@ const TodoHeader: FC<Props> = ({ setList }) => {
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setVal(e.target.value);
-  }, [setVal]);
+  }, []);
 
   const addTodo = useCallback((e) => {
     if (e.key !== 'Enter') {

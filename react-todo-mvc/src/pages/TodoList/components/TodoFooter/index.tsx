@@ -37,13 +37,13 @@ const TodoFooter: FC<Props> = ({ list, setList, todoStatus, setTodoStatus }) => 
 
         <ul className="filters" onClick={handleClick}>
           <li>
-            <a href="#/all" data-status="all" className={todoStatus === 'all' ? 'selected' : ''}>All</a>
+            <a href="#/" data-status="all" className={todoStatus === 'all' ? 'selected' : ''}>All</a>
           </li>
           <li>
-            <a href="#/active" data-status="active" className={todoStatus === 'active' ? 'selected' : ''}>Active</a>
+            <a href="#/" data-status="active" className={todoStatus === 'active' ? 'selected' : ''}>Active</a>
           </li>
           <li>
-            <a href="#/completed" data-status="completed" className={todoStatus === 'completed' ? 'selected' : ''}>Completed</a>
+            <a href="#/" data-status="completed" className={todoStatus === 'completed' ? 'selected' : ''}>Completed</a>
           </li>
         </ul>
 

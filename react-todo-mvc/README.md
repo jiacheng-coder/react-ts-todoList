@@ -25,11 +25,13 @@
 
 ## 任务
 
-3.复制一份，使用useReducer实现 (next month)
+6月：
 
-4.Router添加（下个月）
+- 和产品确定联调时间
+- RooUI版 - 对话框添加事项（CRUD）
 
+7月：
 
-RooUI版 - 对话框添加事项（CRUD）
-
-和产品确定联调时间
+- 使用useReducer
+- 学习使用React-Router
+- 状态管理学习

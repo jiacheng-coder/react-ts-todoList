@@ -9,12 +9,11 @@ interface Props {
   todoStatus: TodoStatus;
 }
 
-const TodoMain:FC<Props> = (props) => {
-  const {
-    list,
-    setList,
-    todoStatus,
-  } = props;
+const TodoMain:FC<Props> = ({
+  list,
+  setList,
+  todoStatus,
+}) => {
   const filterList = useMemo(()=>list.filter(item => {
     if (todoStatus==='completed') {
       return item.completed===true

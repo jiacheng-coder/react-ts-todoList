@@ -6,8 +6,7 @@ interface Props {
   setList: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const TodoItem: FC<Props> = (props) => {
-  const { todo, setList } = props;
+const TodoItem: FC<Props> = ({ todo, setList }) => {
   const [editedTodo, setEditedTodo] = useState<Todo>(); // 双击出现的输入框
   const [tmpVal, setTmpVal] = useState(''); // 临时存储输入框的内容
 

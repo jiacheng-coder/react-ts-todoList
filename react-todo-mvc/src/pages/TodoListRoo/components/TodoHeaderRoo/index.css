@@ -1,0 +1,21 @@
+/* .todo-header-roo {
+  display: flex;
+  justify-content: space-between;
+} */
+.todo-header-roo section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.todo-header-roo section .left {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* gap: 20px; */
+}
+.todo-header-roo section .left text {
+  width: 140px;
+}
+.todo-header-roo section .left button {
+  width: 150px;
+}

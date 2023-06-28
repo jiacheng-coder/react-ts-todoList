@@ -1,9 +1,13 @@
-import React, { FC, useState } from 'react';
-import { TodoItem } from '../../../../types/TodoItem';
-import { CheckBox, Input, Panel, DatePicker } from '@roo/roo';
+import React, { useState, useContext, useCallback } from 'react';
+import { Radio, Input, DatePicker, Select, Modal, Toast, Icon } from '@roo/roo';
 import Form from '@roo/roo/Form';
 import Button from '@roo/roo/Button';
-import { v4 as uuid } from 'uuid';
+import { TodoContext } from '../..';
+import "./index.css"
+import { TodoStatus } from '../../../../types/TodoStatus';
+
+const { Textarea } = Input;
+const RadioGroup = Radio.ButtonGroup;
 
 const rules = {
   title: {
@@ -24,22 +28,21 @@ const rules = {
   ],
 };
 
-interface Props {
-  val: string;
-  setVal: (val: string) => void;
-  list: TodoItem[];
-  setList: (val: Array<TodoItem>) => void;
-}
-
 const initialFormValue = {
+  id: '',
   title: '',
   content: '',
-  completed: false,
+  completed: 0,
   date: ''
 };
 
-const TodoHeaderRoo: FC<Props> = ({ val, setVal, list, setList }) => {
+const TodoHeaderRoo= () => {
+  const {setList,todoStatus,setTodoStatus} = useContext(TodoContext)
   const [formValue, setFormValue] = useState(initialFormValue);
+
+  const showModal = useCallback(()=>{
+    setVisible(preVisible=>!preVisible)
+  },[])
 
   const handleChangeField = (title: string, value: any) => {
     setFormValue({
@@ -48,39 +51,85 @@ const TodoHeaderRoo: FC<Props> = ({ val, setVal, list, setList }) => {
     });
   };
 
+  const handleTodoStatusChange = useCallback((status:TodoStatus)=>{
+    setTodoStatus(status)
+  },[setTodoStatus])
+
+  const searchTodos = ()=>{
+
+  }
+
+  const resetTodos = ()=>{
+
+  }
+
+  const [visible,setVisible] = useState(false)
+  const closeModal = ()=>{
+    setVisible(preVisible=>!preVisible)
+  }
+
+  const [editType,setEditType] = useState(true)
+
+  const showError = (message:any) => {
+    Toast.open({
+      title: '添加失败',
+      children: `${message}!`,
+      theme: 'light',
+      icon: <Icon name="times-circle-o" />
+    });
+  }
+
+  const handleSubmit = (value:any, errors:any) => {
+    if (errors) {
+      showError(errors[0].message)
+      return
+    }
+    const todo = {
+      ...value,
+      id: Date.now(),
+    };
+    setList(preList=>[...preList,todo])
+  }
+
   return (
-    <header>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Todos</h1>
-      <Panel title="添加代办" bordered collapsable defaultCollapsed={false}
+    <header className='todo-header-roo'>
+      <h2>代办汇总</h2>
+      <section>
+        <div className='left'>
+          <text>待办标题: </text>
+          <Input placeholder='请输入待办标题'/>
+          <text style={{marginLeft:'20px'}}>待办状态:</text>
+          <Select
+            options={
+              [
+                { value: 'all', label: '全部' },
+                { value: 'completed', label: '已完成', },
+                { value: 'active', label: '未完成', },
+              ]
+            }
+            value={todoStatus}
+            onChange={handleTodoStatusChange}
+          />
+          <Button style={{marginLeft:'20px'}} onClick={searchTodos}>查询</Button>
+          <Button type='hollow' style={{marginLeft:'20px'}} onClick={resetTodos}>重置</Button>
+        </div>
+        <div className='right'>
+          <Button onClick={showModal} type='brand'>添加待办</Button>
+        </div>
+      </section>
+      <Modal
+        title="添加待办事项"
+        visible={visible}
+        keyboard
+        size='lg'
+        lazy
+        onCancel={closeModal}
+        onConfirm={closeModal}
       >
         <Form
           value={formValue}
           rules={rules}
-          onSubmit={(value, errors) => {
-            // 错误处理
-            if (errors) {
-              return
-            }
-            const todo = {
-              ...value,
-              id: uuid(),
-            };
-            // id覆盖
-            let idx = list.findIndex(item=>item.id===todo.id)
-            if (idx===-1) {
-              // 新增
-              setList([...list,{
-                ...value,
-                id: uuid(),
-              }])
-            }else {
-              // 编辑
-              const newList = list.map(item=>{
-                return (item.id===todo.id)?{...todo}:item
-              })
-              setList(newList)
-            }
-          }}
+          onSubmit={handleSubmit}
           onReset={()=>{
             setFormValue(initialFormValue)
           }}
@@ -105,22 +154,42 @@ const TodoHeaderRoo: FC<Props> = ({ val, setVal, list, setList }) => {
                   />
                 )}
               </Form.Field>
-              {/* 换成文本域 */}
               <Form.Field label="内容" name="content" required>
                 {({ value, handleChange }: any) => (
-                  <Input value={value} onChange={handleChange} />
+                  <Textarea
+                    placeholder="可控制大小调整和文本统计"
+                    statistics
+                    maxLength={40}
+                    resize="horizontal"
+                    rows={5}
+                    cols={40}
+                    value={value}
+                    onChange={handleChange}
+                  />
                 )}
               </Form.Field>
               <Form.Field label="状态" name="completed" required>
                 {({ value, handleChange }: any) => (
                   <>
-                    <CheckBox value={value} onChange={handleChange}>是否已完成</CheckBox>
-                    {/* <CheckBox value={value} onChange={handleChange}>未完成</CheckBox> */}
+                    <RadioGroup value={value} defaultValue="默认">
+                      <Radio disabled={!editType} value={0} onChange={(e)=>{
+                        const {value} = e.target;
+                        handleChange(value);
+                      }}>
+                        未完成
+                      </Radio>
+                      <Radio disabled={!editType} value={1} onChange={(e)=>{
+                        const {value} = e.target;
+                        handleChange(value);
+                      }}>
+                        已完成
+                      </Radio>
+                    </RadioGroup>
                   </>
                 )}
               </Form.Field>
               <Form.Field name="date" label="日期" as={(
-                  <DatePicker
+                <DatePicker
                   clearable={true}
                   format="YYYY-MM-DD"
                   valueOfType="string"
@@ -138,7 +207,7 @@ const TodoHeaderRoo: FC<Props> = ({ val, setVal, list, setList }) => {
             </form>
           )}
         </Form>
-      </Panel>
+      </Modal>
     </header>
   );
 };
