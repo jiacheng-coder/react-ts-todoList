@@ -1,10 +1,13 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useMemo, useContext, useCallback } from 'react';
 import { Radio, Input, DatePicker, Select, Modal, Toast, Icon } from '@roo/roo';
 import Form from '@roo/roo/Form';
 import Button from '@roo/roo/Button';
 import { TodoContext } from '../..';
 import "./index.css"
 import { TodoStatus } from '../../../../types/TodoStatus';
+import Table from '@roo/roo/Table';
+import { TodoItem } from '../../../../types/TodoItem';
+import { editTypeEnum } from '../../utils/enum';
 
 const { Textarea } = Input;
 const RadioGroup = Radio.ButtonGroup;
@@ -17,15 +20,23 @@ const rules = {
   },
   content: [
     {
-      required: true,
+      required: false,
       type: 'string',
-      message: '代办内容不能为空哦',
     },
     {
       min: 2,
       message: '至少输入2个字符',
     },
   ],
+  completed: {
+    required: true,
+    message: '请勾选完成状态',
+  },
+  date: {
+    required: true,
+    message: '请选择完成日期',
+    trigger: 'onBlur',
+  }
 };
 
 const initialFormValue = {
@@ -36,8 +47,10 @@ const initialFormValue = {
   date: ''
 };
 
+
 const TodoHeaderRoo= () => {
-  const {setList,todoStatus,setTodoStatus} = useContext(TodoContext)
+  const {filterList, setList, todoStatus, setTodoStatus, editType, setEditType} = useContext(TodoContext)
+
   const [formValue, setFormValue] = useState(initialFormValue);
 
   const showModal = useCallback(()=>{
@@ -66,9 +79,8 @@ const TodoHeaderRoo= () => {
   const [visible,setVisible] = useState(false)
   const closeModal = ()=>{
     setVisible(preVisible=>!preVisible)
+    setFormValue(initialFormValue)
   }
-
-  const [editType,setEditType] = useState(true)
 
   const showError = (message:any) => {
     Toast.open({
@@ -84,14 +96,84 @@ const TodoHeaderRoo= () => {
       showError(errors[0].message)
       return
     }
-    const todo = {
-      ...value,
-      id: Date.now(),
-    };
-    setList(preList=>[...preList,todo])
+    // 编辑
+    if (editType===editTypeEnum.EDIT) {
+      const {id} = value
+      console.log("value:",value)
+      setList(preList=>{
+        let idx = preList.findIndex(item=>item.id===id)
+        const newList = preList.map(item=>{
+          if (item.id===id) {
+            return {
+              id,
+              ...value
+            }
+          }else {
+            return item
+          }
+        })
+        return newList
+      })
+    }
+    // 新增
+    else if (editType===editTypeEnum.ADD) {
+      const todo = {
+        ...value,
+        id: Date.now(),
+      };
+      setList(preList=>[...preList,todo])
+    } 
+    // 查看
+    else {
+      
+    }
+    setFormValue(initialFormValue)
+    closeModal()
   }
+  
+  // Main
+  const deleteSingleTodo = (todo:TodoItem)=>{
+    setList(preList=>preList.filter(item=>item.id!==todo.id))
+  }
+  const remainNum = useMemo(()=>filterList.length,[filterList])
+  const updateTodo = (record:any)=>{
+    setEditType(editTypeEnum.EDIT)
+    let {completed, ...rest} = record
+    setFormValue({
+      ...rest,
+      completed: completed?1:0
+    })
+    showModal()
+  }
+  const columns: any = [
+    { prop: 'id', label: 'ID', align: 'center', width: 150},
+    { prop: 'title', label: '标题', align: 'center', width: 150},
+    { prop: 'content', label: '内容', align: 'center', width: 550},
+    { prop: 'date', label: '创建时间', align: 'center', width: 250},
+    { prop: 'completed', label: '完成状态', align: 'center', width: 250, 
+        render: (text: String) => (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {text?"已完成":"未完成"}
+          </div>
+      )
+    },
+    {
+      prop: '',
+      label: '操作',
+      width: 200,
+      fixed: 'right',
+      align: 'center',
+      render: (text:any,record:TodoItem) => (
+        <>
+          <Button type="brand-text" onClick={()=>updateTodo(record)}>编辑</Button>
+          <Button type="brand-text" onClick={()=>deleteSingleTodo(record)}>删除</Button>
+        </>
+      )
+    }
+  ]
 
   return (
+    <>
     <header className='todo-header-roo'>
       <h2>代办汇总</h2>
       <section>
@@ -114,7 +196,10 @@ const TodoHeaderRoo= () => {
           <Button type='hollow' style={{marginLeft:'20px'}} onClick={resetTodos}>重置</Button>
         </div>
         <div className='right'>
-          <Button onClick={showModal} type='brand'>添加待办</Button>
+          <Button onClick={()=>{
+            setEditType(editTypeEnum.ADD)            
+            showModal()
+          }} type='brand'>添加待办</Button>
         </div>
       </section>
       <Modal
@@ -125,6 +210,8 @@ const TodoHeaderRoo= () => {
         lazy
         onCancel={closeModal}
         onConfirm={closeModal}
+        showCancelButton={false}
+        showConfirmButton={false}
       >
         <Form
           value={formValue}
@@ -149,15 +236,15 @@ const TodoHeaderRoo= () => {
                     value={value}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder="标题"
-                    autoFocus
+                    placeholder="请填写具体标题"
+                    disabled={editType===editTypeEnum.EDIT}
                   />
                 )}
               </Form.Field>
-              <Form.Field label="内容" name="content" required>
+              <Form.Field label="内容" name="content">
                 {({ value, handleChange }: any) => (
                   <Textarea
-                    placeholder="可控制大小调整和文本统计"
+                    placeholder="请填写具体要完成的内容！"
                     statistics
                     maxLength={40}
                     resize="horizontal"
@@ -171,16 +258,14 @@ const TodoHeaderRoo= () => {
               <Form.Field label="状态" name="completed" required>
                 {({ value, handleChange }: any) => (
                   <>
-                    <RadioGroup value={value} defaultValue="默认">
-                      <Radio disabled={!editType} value={0} onChange={(e)=>{
-                        const {value} = e.target;
-                        handleChange(value);
+                    <RadioGroup value={value}>
+                      <Radio value={0} onChange={(e)=>{
+                        handleChange(e.target.value);
                       }}>
                         未完成
                       </Radio>
-                      <Radio disabled={!editType} value={1} onChange={(e)=>{
-                        const {value} = e.target;
-                        handleChange(value);
+                      <Radio value={1} onChange={(e)=>{
+                        handleChange(e.target.value);
                       }}>
                         已完成
                       </Radio>
@@ -188,7 +273,7 @@ const TodoHeaderRoo= () => {
                   </>
                 )}
               </Form.Field>
-              <Form.Field name="date" label="日期" as={(
+              <Form.Field name="date" label="日期" required as={(
                 <DatePicker
                   clearable={true}
                   format="YYYY-MM-DD"
@@ -198,7 +283,9 @@ const TodoHeaderRoo= () => {
                     document.querySelector('#scroll-wrap') || document.querySelector('#root')
                   }
                   />
-              )}>
+              )}
+              disabled={editType===editTypeEnum.EDIT}
+              >
               </Form.Field>
               <Form.Field>
                 <Button onClick={submitForm}>确认</Button>
@@ -209,6 +296,25 @@ const TodoHeaderRoo= () => {
         </Form>
       </Modal>
     </header>
+    <main className='TodoMainRoo' style={{marginTop:"20px"}}>
+    <Table
+      rowKey="id"
+      border
+      hover
+      columns={columns}
+      data={filterList}
+      scrollX={1500}
+      scrollY={600}
+      pagination={{
+          total: remainNum,
+          pageSize: 10,
+          showJumper: true,
+          pageSizeOptions: [10, 20, 30, 50],
+          showTotal: total => `共 ${total} 条数据`
+        }}
+    />
+  </main>
+  </>
   );
 };
 

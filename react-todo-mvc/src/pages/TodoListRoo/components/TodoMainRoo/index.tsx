@@ -10,6 +10,9 @@ const TodoMainRoo= () =>{
     setList(preList=>preList.filter(item=>item.id!==todo.id))
   }
   const remainNum = useMemo(()=>filterList.length,[filterList])
+  const updateTodo = (record:TodoItem)=>{
+    console.log(record)
+  }
   const columns: any = [
     { prop: 'id', label: 'ID', align: 'center', width: 150},
     { prop: 'title', label: '标题', align: 'center', width: 150},
@@ -30,7 +33,7 @@ const TodoMainRoo= () =>{
       align: 'center',
       render: (text:any,record:TodoItem) => (
         <>
-          <Button type="brand-text">编辑</Button>
+          <Button type="brand-text" onClick={()=>updateTodo(record)}>编辑</Button>
           <Button type="brand-text" onClick={()=>deleteSingleTodo(record)}>删除</Button>
         </>
       )
