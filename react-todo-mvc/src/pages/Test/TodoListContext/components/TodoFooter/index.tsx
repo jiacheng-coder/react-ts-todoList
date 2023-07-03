@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useContext, MouseEvent } from "react";
-import { TodoStatus } from "../../../../types/TodoStatus";
+import { TodoStatus } from "../../../../../types/TodoStatus";
 import './index.css'
 import { TodoContext } from "../..";
 

@@ -4,8 +4,8 @@ import TodoHeader from './components/TodoHeader';
 import TodoMain from './components/TodoMain';
 import TodoFooter from './components/TodoFooter';
 // 引入类型
-import { TodoStatus } from '../../types/TodoStatus';
-import { Todo } from '../../types/TodoItem';
+import { TodoStatus } from '../../../types/TodoStatus';
+import { Todo } from '../../../types/TodoItem';
 // 引入样式
 import "./index.css"
 

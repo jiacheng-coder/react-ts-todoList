@@ -1,5 +1,5 @@
 import React, { useCallback, useState, FC } from 'react';
-import { Todo } from '../../../../types/TodoItem';
+import { Todo } from '../../../../../types/TodoItem';
 
 interface Props {
   setList: React.Dispatch<React.SetStateAction<Todo[]>>;

@@ -1,6 +1,6 @@
 import { FC, useMemo, useCallback, MouseEvent } from "react";
-import { Todo } from "../../../../types/TodoItem";
-import { TodoStatus } from "../../../../types/TodoStatus";
+import { Todo } from "../../../../../types/TodoItem";
+import { TodoStatus } from "../../../../../types/TodoStatus";
 import './index.css'
 
 interface Props {

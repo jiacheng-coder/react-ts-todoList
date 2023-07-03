@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useContext, useState } from 'react';
-import { Todo } from '../../../types/TodoItem';
+import { Todo } from '../../../../types/TodoItem';
 import { TodoContext } from '..';
 
 interface Props {

@@ -1,25 +1,51 @@
-import { NavLink, Routes, Route } from "react-router-dom";
-import TodoList from "./pages/TodoList";
-import TodoListContext from "./pages/TodoListContext"
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  Outlet,
+  NavLink,
+  Routes,
+} from "react-router-dom";
+import TodoList from "./pages/Test/TodoList";
+import TodoListContext from "./pages/Test/TodoListContext";
 import TodoListRoo from "./pages/TodoListRoo";
+import { TodoDetail } from "./pages/TodoDetail";
 import NotFound from "./pages/NotFound";
-import "./App.css"
+import "./App.css";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <TodoList KEY="normal-1" />,
+  },
+  {
+    path: "/todo-list-useContext",
+    element: <TodoListContext KEY="normal-2" />,
+  },
+  {
+    path: "/todo-list-roo",
+    element: <TodoListRoo KEY="roo-1"/>,
+    // children: [
+    //   {
+    //     path: "detail",
+    //     element: <TodoDetail />,
+    //   },
+    // ],
+  },
+  {
+    path: '*',
+    element: <NotFound />
+  },
+  {
+    path: 'detail',
+    element: <TodoDetail />
+  }
+]);
 
 export default function App() {
   return (
     <div className="App">
-      <nav>
-        <NavLink to="todo-list">普通版</NavLink>
-        <NavLink to="todo-list-useContext">普通版+useContext</NavLink>
-        <NavLink to="todo-list-roo">袋鼠🦘版</NavLink>
-      </nav>
-      <Routes>
-        <Route path="/todo-list" element={<TodoList KEY="normal-1"/>} />
-        <Route path="/todo-list-useContext" element={<TodoListContext KEY="normal-2"/>} />
-        <Route path="/todo-list-roo" element={<TodoListRoo KEY="roo-1"/>} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <RouterProvider router={router} />
     </div>
   );
 }
-

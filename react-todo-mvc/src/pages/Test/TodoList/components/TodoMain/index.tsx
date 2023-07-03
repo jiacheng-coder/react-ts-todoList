@@ -1,7 +1,7 @@
 import React, { FC,useMemo } from 'react';
 import TodoItem from '../TodoItem';
-import { Todo } from '../../../../types/TodoItem';
-import { TodoStatus } from '../../../../types/TodoStatus';
+import { Todo } from '../../../../../types/TodoItem';
+import { TodoStatus } from '../../../../../types/TodoStatus';
 
 interface Props {
   list: Todo[];
