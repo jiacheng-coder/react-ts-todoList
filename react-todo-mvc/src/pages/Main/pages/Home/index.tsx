@@ -1,16 +1,5 @@
-import React, { useState, useMemo, useContext, useCallback, forwardRef } from "react";
-import {
-  Radio,
-  Input,
-  Button,
-  DatePicker,
-  Select,
-  Modal,
-  Toast,
-  Icon,
-  Table,
-  Switch,
-} from "@roo/roo";
+import React, { useState, useMemo, useContext, useCallback } from "react";
+import { Input, Button, Select, Icon, Table, Switch } from "@roo/roo";
 // Context
 import { TodoContext } from "../..";
 // css
@@ -19,12 +8,10 @@ import "./index.css";
 import { TodoStatus } from "../../../../types/TodoStatus";
 import { TodoItem } from "../../../../types/TodoItem";
 import { editTypeEnum } from "../../utils/enum";
-import { Route, Router } from "react-router";
-import { TodoDetail } from "../../../TodoDetail";
 import { useNavigate } from "react-router";
 
 const TodoHeaderRoo = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { list, setList, todoStatus, setTodoStatus, editType, setEditType } =
     useContext(TodoContext);
   const [searchStatus, setSearchStatus] = useState(false);
@@ -47,7 +34,7 @@ const TodoHeaderRoo = () => {
     } else {
       return tmpList.filter((item) => item.completed === true);
     }
-  }, [list, todoStatus, searchStatus]);
+  }, [list, todoStatus, searchStatus, title]);
   // 剩余数据量
   const remainNum = useMemo(() => displayList.length, [displayList]);
   // 切换完成状态
@@ -64,7 +51,7 @@ const TodoHeaderRoo = () => {
   // 重置搜索状态
   const resetSearchStatus = () => {
     setSearchStatus(false);
-    setTitle('')
+    setTitle("");
   };
   // 删除单个待办事项
   const deleteSingleTodo = (todo: TodoItem) => {
@@ -73,13 +60,14 @@ const TodoHeaderRoo = () => {
   // 更新待办事项
   const updateTodo = (record: any) => {
     setEditType(editTypeEnum.EDIT);
-    let { completed, ...rest } = record;
+    navigate(`/detail/:${record.id}`, { state: { record, editType } });
+    // let { completed, ...rest } = record;
   };
   // 添加待办
   const addTodo = () => {
     setEditType(editTypeEnum.ADD);
-    navigate('/detail')
-  }
+    navigate("/detail");
+  };
   // Table配置
   const columns: any = [
     { prop: "id", label: "ID", align: "center", width: 150 },
@@ -174,10 +162,7 @@ const TodoHeaderRoo = () => {
             </Button>
           </div>
           <div className="right">
-            <Button
-              onClick={addTodo}
-              type="brand"
-            >
+            <Button onClick={addTodo} type="brand">
               {/* <Route path="/todo-roo/detail" Component={TodoDetail}></Route> */}
               添加待办
             </Button>

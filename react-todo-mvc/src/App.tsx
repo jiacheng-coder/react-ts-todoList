@@ -1,45 +1,37 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Route,
-  Outlet,
-  NavLink,
-  Routes,
-} from "react-router-dom";
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import TodoList from "./pages/Test/TodoList";
 import TodoListContext from "./pages/Test/TodoListContext";
-import TodoListRoo from "./pages/TodoListRoo";
-import { TodoDetail } from "./pages/TodoDetail";
+import TodoListRoo from "./pages/Main";
+import { TodoDetail } from "./pages/Main/pages/TodoDetail";
 import NotFound from "./pages/NotFound";
-import "./App.css";
+import HomePage from "./pages/HomePage";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <HomePage />,
+  },
+  {
+    path: "/normal",
     element: <TodoList KEY="normal-1" />,
   },
   {
-    path: "/todo-list-useContext",
+    path: "/context",
     element: <TodoListContext KEY="normal-2" />,
   },
   {
-    path: "/todo-list-roo",
-    element: <TodoListRoo KEY="roo-1"/>,
-    // children: [
-    //   {
-    //     path: "detail",
-    //     element: <TodoDetail />,
-    //   },
-    // ],
+    path: "/roo",
+    element: <TodoListRoo KEY="roo-1" />,
   },
   {
-    path: '*',
-    element: <NotFound />
+    path: "/detail/:id",
+    element: <TodoDetail />,
   },
   {
-    path: 'detail',
-    element: <TodoDetail />
-  }
+    path: "*",
+    element: <NotFound />,
+  },
 ]);
 
 export default function App() {

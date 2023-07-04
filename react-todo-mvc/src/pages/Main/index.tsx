@@ -1,5 +1,5 @@
-import React, { useState, useEffect, createContext, useMemo } from 'react';
-import Home from './components/Home';
+import React, { useState, useEffect, createContext } from 'react';
+import Home from './pages/Home';
 import { TodoItem } from '../../types/TodoItem';
 import { TodoStatus } from '../../types/TodoStatus';
 import "./index.css"

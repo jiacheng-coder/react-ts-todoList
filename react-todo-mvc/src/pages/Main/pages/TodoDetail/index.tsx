@@ -6,10 +6,10 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { TodoContext } from "../TodoListRoo";
-import { editTypeEnum } from "../TodoListRoo/utils/enum";
+import { TodoContext } from "../..";
+import { editTypeEnum } from "../../utils/enum";
 import { Radio, Input, DatePicker, Button, Form, Toast, Icon } from "@roo/roo";
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 const { Textarea } = Input;
 const RadioGroup = Radio.ButtonGroup;
@@ -45,7 +45,8 @@ const rules = {
 
 export const TodoDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const { list, setList, editType } = useContext(TodoContext);
+  const {state} = useLocation()
+  const { setList, editType } = useContext(TodoContext);
   const [formValue, setFormValue] = useState(initialFormValue);
   const navigate = useNavigate()
   const handleChangeField = (title: string, value: any) => {
@@ -100,7 +101,7 @@ export const TodoDetail = () => {
     setFormValue(initialFormValue);
     navigate('/todo-list-roo')
   };
-  let todo = initialFormValue;
+  // let todo = initialFormValue;
   // if (editType === editTypeEnum.ADD) {
   // } else if (editType === editTypeEnum.EDIT) {
   //   todo =
@@ -115,6 +116,8 @@ export const TodoDetail = () => {
   return (
     <>
       <h1>添加事项</h1>
+      <h2>id:{id}</h2>
+      <h2>editType:{state.editType}</h2>
       <Form
         value={formValue}
         rules={rules}
