@@ -1,0 +1,26 @@
+# 忽略node_modules文件夹
+node_modules/
+
+# 忽略构建产物
+dist/
+build/
+*.log
+
+# 忽略本地配置文件
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 忽略编辑器配置文件
+.vscode/
+.idea/
+
+# 忽略缓存文件
+*.cache
+*.swp
+*.DS_Store
+
+# 忽略依赖安装日志
+yarn-error.log
+npm-debug.log
