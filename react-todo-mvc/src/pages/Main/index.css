@@ -1,5 +1,24 @@
-/* roo */
 @import '@roo/roo/theme/default/index.css';
-.TodoListRoo {
-  padding: 20px 40px;
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.todo-header-roo section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.todo-header-roo section .left {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* gap: 20px; */
+}
+.todo-header-roo section .left text {
+  width: 140px;
+}
+.todo-header-roo section .left button {
+  width: 150px;
 }

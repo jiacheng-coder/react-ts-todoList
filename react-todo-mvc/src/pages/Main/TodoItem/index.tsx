@@ -1,25 +1,20 @@
 import { useParams } from "react-router-dom";
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  useCallback,
-  useMemo,
-} from "react";
-import { TodoContext } from "../..";
-import { editTypeEnum } from "../../utils/enum";
-import { Radio, Input, DatePicker, Button, Form, Toast, Icon } from "@roo/roo";
-import { useLocation, useNavigate } from 'react-router';
+import { useState, useContext } from "react";
+import { TodoContext } from "..";
+import { editTypeEnum } from "../../../utils/enum";
+import {
+  Input,
+  DatePicker,
+  Button,
+  Form,
+  Toast,
+  Icon,
+  Switch,
+} from "@roo/roo";
+import { useLocation, useNavigate } from "react-router";
+import {v4 as uuid} from 'uuid'
 
 const { Textarea } = Input;
-const RadioGroup = Radio.ButtonGroup;
-const initialFormValue = {
-  id: "",
-  title: "",
-  content: "",
-  completed: true,
-  date: "",
-};
 const rules = {
   title: {
     required: true,
@@ -28,8 +23,9 @@ const rules = {
   },
   content: [
     {
-      required: false,
+      required: true,
       type: "string",
+      message: "内容不能为空",
     },
   ],
   completed: {
@@ -43,12 +39,31 @@ const rules = {
   },
 };
 
-export const TodoDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const {state} = useLocation()
-  const { setList, editType } = useContext(TodoContext);
+export default function TodoItem() {
+  const navigate = useNavigate();
+  const { setList,editType } = useContext(TodoContext);
+  const { id:rawId } = useParams<{ id: string }>();
+  const id = rawId?.substring(1); // 去掉冒号
+  let initialFormValue = {
+    id: "",
+    title: "",
+    content: "",
+    completed: false,
+    date: "",
+  };
+  const { state } = useLocation();
+  if ([editTypeEnum.EDIT, editTypeEnum.VIEW].includes(editType)) {
+    const { record } = state
+    initialFormValue = {
+      id: id as string,
+      title: record.title,
+      content: record.content,
+      completed: record.completed,
+      date: record.date,
+    };
+  }
+
   const [formValue, setFormValue] = useState(initialFormValue);
-  const navigate = useNavigate()
   const handleChangeField = (title: string, value: any) => {
     setFormValue({
       ...formValue,
@@ -63,61 +78,27 @@ export const TodoDetail = () => {
       icon: <Icon name="times-circle-o" />,
     });
   };
-  const handleSubmit = (value: any, errors: any) => {
-    if (errors) {
+  const handleSubmit = (todo: any, errors: any) => {
+    if (errors) { // 错误处理
       showError(errors[0].message);
       return;
     }
-    // 编辑
-    if (editType === editTypeEnum.EDIT) {
-      const { id } = value;
-      console.log("value:", value);
-      setList((preList) => {
-        let idx = preList.findIndex((item) => item.id === id);
-        const newList = preList.map((item) => {
-          if (item.id === id) {
-            return {
-              id,
-              ...value,
-            };
-          } else {
-            return item;
-          }
-        });
-        return newList;
-      });
-    }
-    // 新增
-    else if (editType === editTypeEnum.ADD) {
-      const todo = {
-        ...value,
-        id: Date.now(),
-      };
-      setList((preList) => [...preList, todo]);
-    }
-    // 查看
-    else {
-    }
-    setFormValue(initialFormValue);
-    navigate('/todo-list-roo')
+    if (editType === editTypeEnum.ADD) {
+      setList(preList => [...preList, {
+        ...todo,
+        id: uuid()
+      }])
+    }else if (editType === editTypeEnum.EDIT) {
+      setList(preList => {
+        return preList.map(item=>item.id===id?todo:item)
+      })
+    }  
+    navigate("/roo/table");
   };
-  // let todo = initialFormValue;
-  // if (editType === editTypeEnum.ADD) {
-  // } else if (editType === editTypeEnum.EDIT) {
-  //   todo =
-  //     useMemo(() => list.find((item) => item.id === id), [id, list]) ||
-  //     initialFormValue;
-  // } else {
-  //   todo =
-  //     useMemo(() => list.find((item) => item.id === id), [id, list]) ||
-  //     initialFormValue;
-  // }
 
   return (
-    <>
-      <h1>添加事项</h1>
-      <h2>id:{id}</h2>
-      <h2>editType:{state.editType}</h2>
+    <div className="detailContainer">
+      <h1>待办详情</h1>
       <Form
         value={formValue}
         rules={rules}
@@ -142,7 +123,7 @@ export const TodoDetail = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="请填写具体标题"
-                  disabled={editType === editTypeEnum.EDIT}
+                  disabled={[editTypeEnum.VIEW, editTypeEnum.EDIT].includes(editType)}
                 />
               )}
             </Form.Field>
@@ -157,30 +138,20 @@ export const TodoDetail = () => {
                   cols={40}
                   value={value}
                   onChange={handleChange}
+                  disabled={editType === editTypeEnum.VIEW}
                 />
               )}
             </Form.Field>
             <Form.Field label="状态" name="completed" required>
               {({ value, handleChange }: any) => (
                 <>
-                  <RadioGroup value={value}>
-                    <Radio
-                      value={0}
-                      onChange={(e) => {
-                        handleChange(e.target.value);
-                      }}
-                    >
-                      未完成
-                    </Radio>
-                    <Radio
-                      value={1}
-                      onChange={(e) => {
-                        handleChange(e.target.value);
-                      }}
-                    >
-                      已完成
-                    </Radio>
-                  </RadioGroup>
+                  <Switch
+                    checked={value}
+                    offText={<Icon name="close" />}
+                    onText={<Icon name="check" />}
+                    onChange={handleChange}
+                    disabled={editType === editTypeEnum.VIEW}
+                  />
                 </>
               )}
             </Form.Field>
@@ -200,17 +171,19 @@ export const TodoDetail = () => {
                   }
                 />
               }
-              disabled={editType === editTypeEnum.EDIT}
+              disabled={[editTypeEnum.VIEW, editTypeEnum.EDIT].includes(editType)}
             ></Form.Field>
             <Form.Field>
-              <Button onClick={submitForm}>确认</Button>
-              <Button onClick={resetForm} type="brand">
-                清空
-              </Button>
+              { editType === editTypeEnum.VIEW ? <Button onClick={()=>navigate('/roo/table')} type="brand">返回</Button> : <>
+                <Button onClick={submitForm}>确认</Button>
+                <Button onClick={resetForm} type="brand">
+                  清空
+                </Button>
+              </> }
             </Form.Field>
           </form>
         )}
       </Form>
-    </>
+    </div>
   );
 };
