@@ -5,11 +5,11 @@ import {
 } from "react-router-dom";
 import TodoList from "./pages/Test/TodoList";
 import TodoListContext from "./pages/Test/TodoListContext";
-import TodoRoo from "./pages/Main"
-import Home from "./pages/Main/pages/TodoList";
-import TodoItem from "./pages/Main/pages/TodoCRUD";
+import TodoRoo from "./pages/TodoRoo"
+import Home from "./pages/TodoRoo/pages/TodoTable";
+import TodoItem from "./pages/TodoRoo/pages/TodoCRUD";
 import NotFound from "./pages/NotFound";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/Home";
 import Test from "./pages/Test/index"
 import "./App.css"
 
