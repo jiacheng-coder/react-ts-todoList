@@ -1,23 +1,21 @@
 import React, { useState, useMemo, useContext, useCallback } from "react";
 import { Input, Button, Select, Icon, Table, Switch } from "@roo/roo";
 // Context
-import { TodoContext } from "..";
+import { TodoContext } from "../..";
 // types && enums
-import { TodoStatus } from "../../../types/TodoStatus";
-import { TodoItem } from "../../../types/TodoItem";
-import { editTypeEnum } from "../../../utils/enum";
+import { TodoStatus } from "../../../../types/TodoStatus";
+import { TodoItem } from "../../../../types/TodoItem";
+import { editTypeEnum } from "../../../../utils/enum";
 import { useNavigate } from "react-router";
 
-const TodoHeaderRoo = () => {
+export default function Home() {
   const navigate = useNavigate();
   const { list, setList, todoStatus, setTodoStatus, setEditType } = useContext(TodoContext);
-  const [searchStatus, setSearchStatus] = useState(false);
-  // title
-  const [title, setTitle] = useState("");
-  const handleTitleChange = (e: any) => {
-    const newTitle = e.target.value;
-    setTitle(newTitle);
-  };
+  const [searchStatus, setSearchStatus] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const handleTitleChange = useCallback((e: any) => {
+    setTitle(e.target.value);
+  },[])
   // 展示列表
   const displayList = useMemo(() => {
     const tmpList = list;
@@ -39,40 +37,40 @@ const TodoHeaderRoo = () => {
     setTodoStatus(status);
   }
   // 搜索
-  const searchTodos = () => {
+  const searchTodos = useCallback(() => {
     setSearchStatus(true);
-  };
+  },[])
   // 重置搜索状态
-  const resetSearchStatus = () => {
+  const resetSearchStatus = useCallback(() => {
     setSearchStatus(false);
     setTitle("");
     setTodoStatus('all')
-  };
+  },[])
   // 新增
-  const addTodo = () => {
+  const addTodo = useCallback(() => {
     setEditType(editTypeEnum.ADD)
-    navigate("/roo/:0");
-  };
+    navigate("/roo/0");
+  },[])
   // 删除
-  const deleteSingleTodo = (todo: TodoItem) => {
+  const deleteSingleTodo = useCallback((todo: TodoItem) => {
     setList((preList) => preList.filter((item) => item.id !== todo.id));
-  };
+  },[])
   // 编辑
   const editTodo = (record: any) => {
     setEditType(editTypeEnum.EDIT)
-    navigate(`/roo/:${record.id}`, {
+    navigate(`/roo/${record.id}`, {
       state: { record, editType: editTypeEnum.EDIT },
     });
   };
   // 查看
   const viewTodo = (record: any) => {
     setEditType(editTypeEnum.VIEW)
-    navigate(`/roo/:${record.id}`, {
+    navigate(`/roo/${record.id}`, {
       state: { record, editType: editTypeEnum.VIEW },
     });
   };
   // Table配置
-  const columns: any = [
+  const columns: any = useMemo(()=>[
     { prop: "id", label: "ID", align: "center", width: 150 },
     { prop: "title", label: "标题", align: "center", width: 150 },
     { prop: "content", label: "内容", align: "center", width: 550 },
@@ -131,7 +129,7 @@ const TodoHeaderRoo = () => {
         </>
       ),
     },
-  ];
+  ],[])
 
   return (
     <>
@@ -196,5 +194,3 @@ const TodoHeaderRoo = () => {
     </>
   );
 };
-
-export default TodoHeaderRoo;

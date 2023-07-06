@@ -6,8 +6,8 @@ import {
 import TodoList from "./pages/Test/TodoList";
 import TodoListContext from "./pages/Test/TodoListContext";
 import TodoRoo from "./pages/Main"
-import Home from "./pages/Main/Home";
-import TodoItem from "./pages/Main/TodoItem";
+import Home from "./pages/Main/pages/TodoList";
+import TodoItem from "./pages/Main/pages/TodoCRUD";
 import NotFound from "./pages/NotFound";
 import HomePage from "./pages/HomePage";
 import Test from "./pages/Test/index"

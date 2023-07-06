@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useContext } from "react";
-import { TodoContext } from "..";
-import { editTypeEnum } from "../../../utils/enum";
+import { TodoContext } from "../..";
+import { editTypeEnum } from "../../../../utils/enum";
 import {
   Input,
   DatePicker,
@@ -38,46 +38,51 @@ const rules = {
     trigger: "onBlur",
   },
 };
+const showError = (message: any) => {
+  Toast.open({
+    title: "添加失败",
+    children: `${message}!`,
+    theme: "light",
+    icon: <Icon name="times-circle-o" />,
+  });
+};
 
-export default function TodoItem() {
+const emptyFormValue = {
+  id: "",
+  title: "",
+  content: "",
+  completed: false,
+  date: "",
+};
+
+export default function TodoCRUD() {
   const navigate = useNavigate();
-  const { setList,editType } = useContext(TodoContext);
-  const { id:rawId } = useParams<{ id: string }>();
-  const id = rawId?.substring(1); // 去掉冒号
-  let initialFormValue = {
-    id: "",
-    title: "",
-    content: "",
-    completed: false,
-    date: "",
-  };
+  const { setList, editType } = useContext(TodoContext);
+  const { id } = useParams<{ id: string }>();
   const { state } = useLocation();
-  if ([editTypeEnum.EDIT, editTypeEnum.VIEW].includes(editType)) {
-    const { record } = state
-    initialFormValue = {
-      id: id as string,
-      title: record.title,
-      content: record.content,
-      completed: record.completed,
-      date: record.date,
-    };
-  }
 
-  const [formValue, setFormValue] = useState(initialFormValue);
+  const [formValue, setFormValue] = useState(() => {
+    let initialFormValue = emptyFormValue
+    if ([editTypeEnum.EDIT, editTypeEnum.VIEW].includes(editType)) {
+      const { record } = state
+      initialFormValue = {
+        id: id as string,
+        title: record.title,
+        content: record.content,
+        completed: record.completed,
+        date: record.date,
+      };
+    }
+    return initialFormValue
+  });
+
   const handleChangeField = (title: string, value: any) => {
     setFormValue({
       ...formValue,
       [title]: value,
     });
   };
-  const showError = (message: any) => {
-    Toast.open({
-      title: "添加失败",
-      children: `${message}!`,
-      theme: "light",
-      icon: <Icon name="times-circle-o" />,
-    });
-  };
+
   const handleSubmit = (todo: any, errors: any) => {
     if (errors) { // 错误处理
       showError(errors[0].message);
@@ -90,10 +95,11 @@ export default function TodoItem() {
       }])
     }else if (editType === editTypeEnum.EDIT) {
       setList(preList => {
-        return preList.map(item=>item.id===id?todo:item)
+        return preList.map(item => item.id === id ? todo : item)
       })
     }  
     navigate("/roo/table");
+    // navigate("/roo/table", {state: todo});
   };
 
   return (
@@ -104,7 +110,7 @@ export default function TodoItem() {
         rules={rules}
         onSubmit={handleSubmit}
         onReset={() => {
-          setFormValue(initialFormValue);
+          setFormValue(emptyFormValue);
         }}
         onChange={(name, value) => {
           handleChangeField(name as string, value);
