@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useContext, useCallback } from "react";
 import { Input, Button, Select, Icon, Table, Switch } from "@roo/roo";
 // Context
-import { TodoContext } from "../..";
+import { TodoContext, useTodoContext } from "../../MyContextProvider";
 // types && enums
 import { TodoStatus } from "../../../../types/TodoStatus";
 import { TodoItem } from "../../../../types/TodoItem";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { list, setList, todoStatus, setTodoStatus, setEditType } = useContext(TodoContext);
+  const { list, setList, todoStatus, setTodoStatus, setEditType } = useTodoContext();
   const [searchStatus, setSearchStatus] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const handleTitleChange = useCallback((e: any) => {

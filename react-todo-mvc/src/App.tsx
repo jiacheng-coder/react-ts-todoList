@@ -11,6 +11,7 @@ import TodoItem from "./pages/TodoRoo/pages/TodoCRUD";
 import NotFound from "./pages/NotFound";
 import HomePage from "./pages/Home";
 import Test from "./pages/Test/index"
+import Formily from "./pages/Formily";
 import "./App.css"
 
 export default function App() {
@@ -28,8 +29,12 @@ export default function App() {
       element: <TodoListContext KEY="normal-2" />,
     },
     {
+      path: "/formily",
+      element: <Formily />,
+    },
+    {
       path: "/roo",
-      element: <TodoRoo KEY="roo-1" />,
+      element: <TodoRoo />,
       children: [
         {
           path: 'table',

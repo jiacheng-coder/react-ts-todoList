@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useContext } from "react";
-import { TodoContext } from "../..";
+import { TodoContext, useTodoContext } from "../../MyContextProvider";
 import { editTypeEnum } from "../../../../utils/enum";
 import {
   Input,
@@ -38,15 +38,14 @@ const rules = {
     trigger: "onBlur",
   },
 };
-const showError = (message: any) => {
+const showError = (message: string) => {
   Toast.open({
-    title: "添加失败",
-    children: `${message}!`,
+    title: "添加失败!",
+    children: `${message}`,
     theme: "light",
     icon: <Icon name="times-circle-o" />,
   });
 };
-
 const emptyFormValue = {
   id: "",
   title: "",
@@ -57,7 +56,7 @@ const emptyFormValue = {
 
 export default function TodoCRUD() {
   const navigate = useNavigate();
-  const { setList, editType } = useContext(TodoContext);
+  const { setList, editType } = useTodoContext();
   const { id } = useParams<{ id: string }>();
   const { state } = useLocation();
 
@@ -180,12 +179,15 @@ export default function TodoCRUD() {
               disabled={[editTypeEnum.VIEW, editTypeEnum.EDIT].includes(editType)}
             ></Form.Field>
             <Form.Field>
-              { editType === editTypeEnum.VIEW ? <Button onClick={()=>navigate('/roo/table')} type="brand">返回</Button> : <>
-                <Button onClick={submitForm}>确认</Button>
-                <Button onClick={resetForm} type="brand">
-                  清空
-                </Button>
-              </> }
+              { editType === editTypeEnum.VIEW 
+              ? <Button onClick={ () => navigate('/roo/table')} type="brand">返回</Button>
+              : <>
+                  <Button onClick={submitForm}>确认</Button>
+                  <Button onClick={resetForm} type="brand">
+                    清空
+                  </Button>
+                </> 
+              }
             </Form.Field>
           </form>
         )}
