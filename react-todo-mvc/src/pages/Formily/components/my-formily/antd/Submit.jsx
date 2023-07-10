@@ -1,11 +1,10 @@
-import { useParentForm } from "@formily/react";
+import { useParentForm } from "../react";
 import { Button } from "antd";
-import React from "react";
 
 export const Submit = ({ children, onClick, onSubmit, onSubmitSuccess, onSubmitFailed }) => {
   // 获取Form表单
   const form = useParentForm()
-  return <Button onClick={(e) => { 
+  return <Button type="primary" onClick={(e) => { 
     if (onClick) {
       if (onClick(e) === false) {
         alert("重复提交")
