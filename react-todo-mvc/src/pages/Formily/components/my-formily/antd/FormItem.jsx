@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { FieldContext } from "@formily/react";
+import { FieldContext, observer } from "@formily/react";
 
-export const FormItem = ({ children }) => {
+// observer(实现响应式) -> FormItem -> Field
+export const FormItem = observer(({ children }) => {
   const field = useContext(FieldContext);
-  // console.log("field", field.component);
   return (
     <div>
       <div>{field.title}</div>
@@ -11,4 +11,4 @@ export const FormItem = ({ children }) => {
       <div>{field.selfErrors.join(",")}</div>
     </div>
   );
-};
+})
