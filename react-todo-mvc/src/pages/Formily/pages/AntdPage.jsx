@@ -1,5 +1,5 @@
 import { createForm } from "@formily/core";
-import { FormProvider, Field, FormConsumer } from "../components/my-formily/react";
+import { FormProvider, FormConsumer, Field } from "@formily/react";
 import { FormItem, Input, Submit } from "../components/my-formily/antd";
 
 const form = createForm();
@@ -20,6 +20,7 @@ const createPasswordEqualValidate = (equalName) => (field) => {
 export default () => {
   return (
     <FormProvider form={form}>
+      {/* 理解层级：FormItem 包裹 Field */}
       <Field
         name="name"
         title="Name"
@@ -71,7 +72,7 @@ export default () => {
         提交
       </Submit>
       <div>
-        <FormConsumer>{(form) => form.values.name}</FormConsumer>
+        <FormConsumer>{() => form.values.name}</FormConsumer>
       </div>
     </FormProvider>
   );

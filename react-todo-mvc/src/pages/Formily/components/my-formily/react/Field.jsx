@@ -1,3 +1,4 @@
+// 组件层 field
 import React, { useContext } from "react";
 import { FormContext } from "./context";
 import { FieldContext, observer } from "@formily/react";
@@ -5,6 +6,8 @@ import { FieldContext, observer } from "@formily/react";
 const Field = observer((props) => {
   const form = useContext(FormContext);
   const field = form.createField(props);
+  console.log(form)
+  console.log(field)
   const component = React.createElement(field.component[0], {
     ...field.component[1],
     value: field.value,
@@ -18,6 +21,6 @@ const Field = observer((props) => {
   return (
     <FieldContext.Provider value={field}>{decorator}</FieldContext.Provider>
   );
-})
+});
 
 export default Field;
