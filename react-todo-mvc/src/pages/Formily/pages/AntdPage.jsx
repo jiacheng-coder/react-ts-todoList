@@ -1,8 +1,8 @@
 import { createForm } from "@formily/core";
 import { FormProvider, FormConsumer, Field } from "@formily/react";
-import { FormItem, Input, Submit } from "../components/my-formily/antd";
+import { FormItem, Input, Submit } from "../components/my-formily/antd"; // 实现@formily/antd —— 第三层：组件拓展层
 
-const form = createForm();
+const form = createForm(); // 内核层：创建form对象
 
 // 高阶函数，它接收一个参数equalName，并返回一个新的函数；这个新的函数接收一个参数field。
 const createPasswordEqualValidate = (equalName) => (field) => {
@@ -20,7 +20,7 @@ const createPasswordEqualValidate = (equalName) => (field) => {
 export default () => {
   return (
     <FormProvider form={form}>
-      {/* 理解层级：FormItem 包裹 Field */}
+      {/* 理解层级：decorator 包裹 component */}
       <Field
         name="name"
         title="Name"
@@ -39,7 +39,7 @@ export default () => {
           Input,
           { placeholder: "Please Input password~", type: "password" },
         ]}
-        reactions={createPasswordEqualValidate("confirm_password")}
+        reactions={createPasswordEqualValidate("confirm_password")} // field.value就是password的值，form.values[equalName]就是confirm_password的值
       />
       <Field
         name="confirm_password"
@@ -72,7 +72,7 @@ export default () => {
         提交
       </Submit>
       <div>
-        <FormConsumer>{() => form.values.name}</FormConsumer>
+        <FormConsumer>{() => <>Name:{form.values.name}</>}</FormConsumer>
       </div>
     </FormProvider>
   );
